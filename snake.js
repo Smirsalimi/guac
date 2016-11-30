@@ -2,27 +2,62 @@ var DIRECTION_MAPPING = {
 	"right": {dx:1, dy:0, opp:"left"},
 	"left": {dx:-1, dy:0, opp:"right"},
 	"up": {dx:0, dy:-1, opp:"down"},
-	"down": {dx:0, dy:1, opp:"up"},	
+	"down": {dx:0, dy:1, opp:"up"}	
 }
+
+var images = new Object();
+
 var drawSnake = function(newSnake, applePixel) {
 
-	var goblin = document.createElement("IMG");
-	goblin.src = "images/goblin.png";
+
+	var drawableSnake = { img: images, pixels: newSnake };
+	var apple = {img: images, pixels: [applePixel]}
+	var drawableObjects = [drawableSnake, apple];
+  snakeCanvas.draw(drawableObjects);
+	
+}
+
+var init = function(){
+
+  //right
+  var goblin = document.createElement("IMG");
+  goblin.src = "images/goblin.png";
+  //up
+  var goblinu = document.createElement("IMG");
+  goblinu.src = "images/goblin-up.png";
+  //down
+  var goblind = document.createElement("IMG");
+  goblind.src = "images/goblin-down.png";
+  //left
+  var goblinl = document.createElement("IMG");
+  goblinl.src = "images/goblin-left.png";
+
   var guac = document.createElement("IMG");
   guac.src = "images/guac.png";
-	var drawableSnake = { img: goblin, color: "green", pixels: newSnake };
-	var apple = {img: guac, pixels: [applePixel]}
-	var drawableObjects = [drawableSnake, apple];
-	var canvasDraw = function() {
-		snakeCanvas.draw(drawableObjects);
-	}
 
-	if(goblin.complete && guac.complete) { 
-   		canvasDraw()
-	}else {
-   		goblin.onload = canvasDraw();
-      guac.onload = canvasDraw();
-	}
+  images["right"] = goblinl;
+  images["left"] = goblin;
+  images["down"] = goblinu;
+  images["up"] = goblind;
+  images["guac"] = guac;
+
+  var imagesLoaded = 0;
+
+  var waitforload = function(images){
+    imagesLoaded++;
+    if(imagesLoaded == Object.keys(images).length){
+      snakeCanvas.executeNTimesPerSecond(advanceGame, 2);
+    }
+  }
+
+  Object.keys(images).forEach(function(image){
+    if(!image.complete){
+      image.onload = waitforload(images);
+    } else {
+      imagesLoaded++;
+    }
+  });
+
 }
 
 var moveSnake = function(currentSnake, direction) {
@@ -31,7 +66,7 @@ var moveSnake = function(currentSnake, direction) {
   				%  snakeCanvas.gameWidth();
   var newY = (snakeCanvas.gameHeight() + oldSegment.top + direction.dy) 
   				%  snakeCanvas.gameHeight();
-  var newSegment = { top: newY, left: newX };
+  var newSegment = { top: newY, left: newX , imageName: direction.opp};
   if(snakeCanvas.detectCollisionBetween([newSegment], [appleLocation])){
   	eatApple();
   }
@@ -69,8 +104,12 @@ document.addEventListener('keydown', function(e) {
       }
     });
 
-var snake = [{ top: 0, left: 4},{ top: 0, left: 3},{ top: 0, left: 2}, { top: 0, left: 1}, { top: 0, left: 0}];
 var snakeDirection = "right";
+var snake = [{ top: 0, left: 4, imageName: "left"},
+             { top: 0, left: 3, imageName: "left"},
+             { top: 0, left: 2, imageName: "left"},
+             { top: 0, left: 1, imageName: "left"},
+             { top: 0, left: 0, imageName: "left"}];
 var appleLocation = snakeCanvas.randomLocation();
 var delay = 0;
-snakeCanvas.executeNTimesPerSecond(advanceGame, 2);
+

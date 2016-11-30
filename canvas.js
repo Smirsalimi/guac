@@ -54,7 +54,7 @@ var snakeCanvas = {
     objects.forEach(function(object) {
       object.pixels.forEach(function(pixel) {
       	var translatedPixel = snakeCanvas.translatePixel(pixel);
-        ui.canvas().drawImage(object.img, translatedPixel.left, translatedPixel.top);
+        ui.canvas().drawImage(object.img[pixel.imageName], translatedPixel.left, translatedPixel.top);
       });
     });
   },
@@ -91,6 +91,7 @@ var snakeCanvas = {
     return {
       top: Math.floor(Math.random()*snakeCanvas.gameHeight()),
       left: Math.floor(Math.random()*snakeCanvas.gameWidth()),
+      imageName: "guac"
     }
   },
   flashMessage: function(message) {
