@@ -7,18 +7,21 @@ var DIRECTION_MAPPING = {
 var drawSnake = function(newSnake, applePixel) {
 
 	var goblin = document.createElement("IMG");
-	goblin.src = "goblin.png";
+	goblin.src = "images/goblin.png";
+  var guac = document.createElement("IMG");
+  guac.src = "images/guac.png";
 	var drawableSnake = { img: goblin, color: "green", pixels: newSnake };
-	var apple = {img: goblin, pixels: [applePixel]}
+	var apple = {img: guac, pixels: [applePixel]}
 	var drawableObjects = [drawableSnake, apple];
 	var canvasDraw = function() {
 		snakeCanvas.draw(drawableObjects);
 	}
 
-	if(goblin.complete) { 
+	if(goblin.complete && guac.complete) { 
    		canvasDraw()
 	}else {
    		goblin.onload = canvasDraw();
+      guac.onload = canvasDraw();
 	}
 }
 
