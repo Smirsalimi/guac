@@ -10,6 +10,7 @@ var snakeCanvas = {
   },
   started: true,
   attrs: {},
+  grid: {},
   gameHeight: function() {
     return this.attrs.gameHeight || (this.attrs.gameHeight = this.canvasHeight / this.pixelSize);
   },
@@ -100,5 +101,17 @@ var snakeCanvas = {
     context.font = '20pt Calibri';
     context.fillStyle = 'yellow';
     context.fillText(message, 275, 100);
+  },
+  addPixel: function(pixel){ 
+  	if(!this.grid.hasOwnProperty(pixel.left)){
+  		this.grid[pixel.left] = {};
+  	}
+
+ 		this.grid[pixel.left][pixel.top] = true;
+  },
+  removePixel: function(pixel) {
+  	if(this.grid.hasOwnProperty(pixel.left)){
+  		delete this.grid[pixel.left][pixel.top];
+  	}
   }
 }

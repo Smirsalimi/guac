@@ -72,12 +72,12 @@ var moveSnake = function(currentSnake, direction) {
   }
 
   currentSnake.unshift(newSegment);
-
+	snakeCanvas.addPixel(newSegment);
   if(delay > 0){
   	delay -= 1;
   }
   else{
-  	currentSnake.pop();
+  	snakeCanvas.removePixel(currentSnake.pop());
   }
 }
 
